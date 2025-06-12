@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - DeepL Copy</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+    <div class="settings-container">
+        <header class="settings-header">
+            <h2>Settings</h2>
+        </header>
+        
+        <div class="settings-content">
+            <div class="setting-group">
+                <label for="apiProvider">API Provider:</label>
+                <select id="apiProvider">
+                    <option value="">Select a provider...</option>
+                    <option value="openai">OpenAI (ChatGPT)</option>
+                    <option value="anthropic">Anthropic (Claude)</option>
+                    <option value="custom">Custom API</option>
+                </select>
+                <small class="help-text">Choose your preferred AI translation service</small>
+            </div>
+
+            <div class="setting-group">
+                <label for="apiKey">API Key:</label>
+                <div class="input-group">
+                    <input type="password" id="apiKey" placeholder="Enter your API key...">
+                    <button type="button" id="toggleApiKey" class="toggle-btn">👁️</button>
+                </div>
+                <small class="help-text">Your API key is stored locally and never shared</small>
+            </div>
+
+            <div class="setting-group" id="modelGroup" style="display: none;">
+                <label for="model">Model:</label>
+                <select id="model">
+                    <option value="">Default model</option>
+                </select>
+                <small class="help-text">Choose the AI model for translation</small>
+            </div>
+
+            <div class="setting-group" id="apiUrlGroup" style="display: none;">
+                <label for="apiUrl">Custom API URL:</label>
+                <input type="url" id="apiUrl" placeholder="https://api.example.com/v1/chat/completions">
+                <small class="help-text">Enter the full API endpoint URL</small>
+            </div>
+
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="autoTranslate">
+                    Auto-translate on text input
+                </label>
+                <small class="help-text">Automatically translate text as you type (with delay)</small>
+            </div>
+
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="saveHistory">
+                    Save translation history
+                </label>
+                <small class="help-text">Keep a local history of your translations</small>
+            </div>
+
+            <div class="api-test" id="apiTest" style="display: none;">
+                <button id="testConnection" class="test-btn">Test Connection</button>
+                <div id="testResult" class="test-result"></div>
+            </div>
+        </div>
+
+        <div class="settings-footer">
+            <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+            <button id="saveBtn" class="btn btn-primary">Save Settings</button>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>

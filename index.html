@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepL Copy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>DeepL Copy</h1>
+            <button id="settingsBtn" class="settings-btn" title="Settings">⚙️</button>
+        </header>
+        
+        <div class="translation-container">
+            <div class="language-selector">
+                <div class="lang-group">
+                    <label for="sourceLang">From:</label>
+                    <select id="sourceLang">
+                        <option value="auto">Detect language</option>
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="hi">Hindi</option>
+                    </select>
+                </div>
+                
+                <button id="swapLangs" class="swap-btn" title="Swap languages">⇄</button>
+                
+                <div class="lang-group">
+                    <label for="targetLang">To:</label>
+                    <select id="targetLang">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="hi">Hindi</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="text-areas">
+                <div class="input-section">
+                    <div class="textarea-container">
+                        <textarea 
+                            id="sourceText" 
+                            placeholder="Enter text to translate..."
+                            rows="8"
+                        ></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span> / 5000
+                        </div>
+                    </div>
+                    <button id="clearBtn" class="clear-btn" title="Clear text">✕</button>
+                </div>
+                
+                <div class="output-section">
+                    <div class="textarea-container">
+                        <textarea 
+                            id="targetText" 
+                            placeholder="Translation will appear here..."
+                            rows="8"
+                            readonly
+                        ></textarea>
+                        <div class="actions">
+                            <button id="copyBtn" class="action-btn" title="Copy translation">📋</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="translate-section">
+                <button id="translateBtn" class="translate-btn">
+                    <span class="btn-text">Translate</span>
+                    <span class="btn-loading" style="display: none;">Translating...</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <div id="statusText" class="status-text"></div>
+            <div id="apiStatus" class="api-status">Not configured</div>
+        </div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>
