@@ -1,4 +1,4 @@
-class DeepLCopy {
+class OpenTranslator {
     constructor() {
         this.settings = {};
         this.init();
@@ -225,5 +225,5 @@ style.textContent = `
 document.head.appendChild(style);
 
 document.addEventListener('DOMContentLoaded', () => {
-    new DeepLCopy();
+    new OpenTranslator();
 });

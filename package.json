@@ -1,5 +1,5 @@
 {
-  "name": "deepl-copy",
+  "name": "open-translator",
   "version": "1.0.0",
   "description": "A DeepL-like translation app that works with any LLM model",
   "main": "main.js",
@@ -9,7 +9,7 @@
     "build": "electron-builder",
     "dist": "electron-builder --publish=never"
   },
-  "keywords": ["electron", "translation", "llm", "deepl"],
+  "keywords": ["electron", "translation", "llm"],
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
@@ -20,8 +20,8 @@
     "axios": "^1.6.0"
   },
   "build": {
-    "appId": "com.example.deepl-copy",
-    "productName": "DeepL Copy",
+    "appId": "com.example.open-translator",
+    "productName": "OpenTranslator",
     "directories": {
       "output": "dist"
     },
