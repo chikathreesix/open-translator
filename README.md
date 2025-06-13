@@ -2,6 +2,8 @@
 
 A modern, Electron-based translation application that works with any LLM model. OpenTranslator provides a DeepL-like interface for translation using OpenAI, Anthropic Claude, or custom API endpoints.
 
+![OpenTranslator Screenshot](screenshot.png)
+
 ## Features
 
 - 🚀 **Multi-Provider Support**: Works with OpenAI GPT models, Anthropic Claude, or custom API endpoints
