@@ -5,5 +5,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
   translateText: (data) => ipcRenderer.invoke('translate-text', data),
   onFocusInput: (callback) => ipcRenderer.on('focus-input', callback),
+  onSettingsClosed: (callback) => ipcRenderer.on('settings-closed', callback),
   openSettings: () => ipcRenderer.invoke('open-settings')
 });

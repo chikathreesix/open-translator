@@ -12,6 +12,12 @@ class DeepLCopy {
         window.electronAPI.onFocusInput(() => {
             document.getElementById('sourceText').focus();
         });
+
+        // Listen for settings window close to refresh settings
+        window.electronAPI.onSettingsClosed(async () => {
+            await this.loadSettings();
+            this.updateAPIStatus();
+        });
     }
 
     async loadSettings() {

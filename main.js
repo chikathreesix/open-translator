@@ -58,6 +58,9 @@ const createSettingsWindow = () => {
   });
 
   settingsWindow.on('closed', () => {
+    if (mainWindow) {
+      mainWindow.webContents.send('settings-closed');
+    }
     settingsWindow = null;
   });
 };
