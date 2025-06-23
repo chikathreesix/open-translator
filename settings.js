@@ -1,6 +1,21 @@
 class SettingsManager {
     constructor() {
         this.settings = {};
+        this.defaultLanguages = [
+            { code: 'auto', name: 'Detect language', enabled: true },
+            { code: 'en', name: 'English', enabled: true },
+            { code: 'es', name: 'Spanish', enabled: true },
+            { code: 'fr', name: 'French', enabled: true },
+            { code: 'de', name: 'German', enabled: true },
+            { code: 'it', name: 'Italian', enabled: true },
+            { code: 'pt', name: 'Portuguese', enabled: true },
+            { code: 'ru', name: 'Russian', enabled: true },
+            { code: 'ja', name: 'Japanese', enabled: true },
+            { code: 'ko', name: 'Korean', enabled: true },
+            { code: 'zh', name: 'Chinese', enabled: true },
+            { code: 'ar', name: 'Arabic', enabled: true },
+            { code: 'hi', name: 'Hindi', enabled: true }
+        ];
         this.init();
     }
 
@@ -27,6 +42,8 @@ class SettingsManager {
         const testConnection = document.getElementById('testConnection');
         const saveBtn = document.getElementById('saveBtn');
         const cancelBtn = document.getElementById('cancelBtn');
+        const addLanguageBtn = document.getElementById('addLanguage');
+        const resetLanguagesBtn = document.getElementById('resetLanguages');
 
         apiProvider.addEventListener('change', (e) => {
             this.handleProviderChange(e.target.value);
@@ -52,6 +69,14 @@ class SettingsManager {
 
         cancelBtn.addEventListener('click', () => {
             window.close();
+        });
+
+        addLanguageBtn.addEventListener('click', () => {
+            this.showAddLanguageDialog();
+        });
+
+        resetLanguagesBtn.addEventListener('click', () => {
+            this.resetLanguages();
         });
 
         document.addEventListener('keydown', (e) => {
@@ -94,7 +119,41 @@ class SettingsManager {
         elements.autoTranslate.checked = this.settings.autoTranslate || false;
         elements.saveHistory.checked = this.settings.saveHistory || false;
 
+        this.populateLanguageList();
         this.updateTestButton();
+    }
+
+    populateLanguageList() {
+        const languageList = document.getElementById('languageList');
+        const languages = this.settings.languages || this.defaultLanguages;
+        
+        languageList.innerHTML = '';
+        
+        languages.forEach(lang => {
+            const languageItem = document.createElement('div');
+            languageItem.className = 'language-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `lang-${lang.code}`;
+            checkbox.checked = lang.enabled;
+            checkbox.addEventListener('change', (e) => {
+                lang.enabled = e.target.checked;
+            });
+            
+            const label = document.createElement('label');
+            label.htmlFor = `lang-${lang.code}`;
+            label.textContent = lang.name;
+            
+            const codeSpan = document.createElement('span');
+            codeSpan.className = 'language-code';
+            codeSpan.textContent = `(${lang.code})`;
+            
+            label.appendChild(codeSpan);
+            languageItem.appendChild(checkbox);
+            languageItem.appendChild(label);
+            languageList.appendChild(languageItem);
+        });
     }
 
     handleProviderChange(provider) {
@@ -184,13 +243,25 @@ class SettingsManager {
     }
 
     getFormData() {
+        const languages = this.settings.languages || this.defaultLanguages;
+        const languageList = document.getElementById('languageList');
+        
+        // Update enabled status from checkboxes
+        languages.forEach(lang => {
+            const checkbox = document.getElementById(`lang-${lang.code}`);
+            if (checkbox) {
+                lang.enabled = checkbox.checked;
+            }
+        });
+
         return {
             apiProvider: document.getElementById('apiProvider').value,
             apiKey: document.getElementById('apiKey').value,
             model: document.getElementById('model').value,
             apiUrl: document.getElementById('apiUrl').value,
             autoTranslate: document.getElementById('autoTranslate').checked,
-            saveHistory: document.getElementById('saveHistory').checked
+            saveHistory: document.getElementById('saveHistory').checked,
+            languages: languages
         };
     }
 
@@ -255,6 +326,97 @@ class SettingsManager {
             messageDiv.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => messageDiv.remove(), 300);
         }, 3000);
+    }
+
+    resetLanguages() {
+        if (confirm('Are you sure you want to reset to default languages? This will restore all default languages.')) {
+            this.settings.languages = [...this.defaultLanguages];
+            this.populateLanguageList();
+            this.showMessage('Languages reset to default', 'success');
+        }
+    }
+
+    showAddLanguageDialog() {
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        
+        const dialog = document.createElement('div');
+        dialog.className = 'add-language-dialog';
+        dialog.innerHTML = `
+            <h3>Add Custom Language</h3>
+            <div class="form-group">
+                <label for="newLangCode">Language Code:</label>
+                <input type="text" id="newLangCode" placeholder="e.g., nl, sv, tr" maxlength="5">
+            </div>
+            <div class="form-group">
+                <label for="newLangName">Language Name:</label>
+                <input type="text" id="newLangName" placeholder="e.g., Dutch, Swedish, Turkish">
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="btn btn-secondary" id="cancelAddLang">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmAddLang">Add Language</button>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        document.body.appendChild(dialog);
+
+        const cancelBtn = dialog.querySelector('#cancelAddLang');
+        const confirmBtn = dialog.querySelector('#confirmAddLang');
+        const codeInput = dialog.querySelector('#newLangCode');
+        const nameInput = dialog.querySelector('#newLangName');
+
+        const closeDialog = () => {
+            document.body.removeChild(overlay);
+            document.body.removeChild(dialog);
+        };
+
+        cancelBtn.addEventListener('click', closeDialog);
+        overlay.addEventListener('click', closeDialog);
+
+        confirmBtn.addEventListener('click', () => {
+            const code = codeInput.value.trim().toLowerCase();
+            const name = nameInput.value.trim();
+
+            if (!code || !name) {
+                this.showMessage('Please fill in both language code and name', 'error');
+                return;
+            }
+
+            if (code.length < 2 || code.length > 5) {
+                this.showMessage('Language code must be 2-5 characters', 'error');
+                return;
+            }
+
+            // Check if language already exists
+            const languages = this.settings.languages || this.defaultLanguages;
+            if (languages.some(lang => lang.code === code)) {
+                this.showMessage('Language code already exists', 'error');
+                return;
+            }
+
+            // Add new language
+            const newLanguage = { code, name, enabled: true };
+            languages.push(newLanguage);
+            this.settings.languages = languages;
+            
+            this.populateLanguageList();
+            this.showMessage(`Added language: ${name} (${code})`, 'success');
+            closeDialog();
+        });
+
+        // Focus on first input
+        codeInput.focus();
+
+        // Handle Enter key
+        const handleEnter = (e) => {
+            if (e.key === 'Enter') {
+                confirmBtn.click();
+            }
+        };
+
+        codeInput.addEventListener('keydown', handleEnter);
+        nameInput.addEventListener('keydown', handleEnter);
     }
 }
 

@@ -1,12 +1,28 @@
 class OpenTranslator {
     constructor() {
         this.settings = {};
+        this.defaultLanguages = [
+            { code: 'auto', name: 'Detect language', enabled: true },
+            { code: 'en', name: 'English', enabled: true },
+            { code: 'es', name: 'Spanish', enabled: true },
+            { code: 'fr', name: 'French', enabled: true },
+            { code: 'de', name: 'German', enabled: true },
+            { code: 'it', name: 'Italian', enabled: true },
+            { code: 'pt', name: 'Portuguese', enabled: true },
+            { code: 'ru', name: 'Russian', enabled: true },
+            { code: 'ja', name: 'Japanese', enabled: true },
+            { code: 'ko', name: 'Korean', enabled: true },
+            { code: 'zh', name: 'Chinese', enabled: true },
+            { code: 'ar', name: 'Arabic', enabled: true },
+            { code: 'hi', name: 'Hindi', enabled: true }
+        ];
         this.init();
     }
 
     async init() {
         await this.loadSettings();
         this.setupEventListeners();
+        this.populateLanguageSelectors();
         this.updateAPIStatus();
         
         window.electronAPI.onFocusInput(() => {
@@ -16,6 +32,7 @@ class OpenTranslator {
         // Listen for settings window close to refresh settings
         window.electronAPI.onSettingsClosed(async () => {
             await this.loadSettings();
+            this.populateLanguageSelectors();
             this.updateAPIStatus();
         });
     }
@@ -148,23 +165,53 @@ class OpenTranslator {
         }
     }
 
+    populateLanguageSelectors() {
+        const languages = this.settings.languages || this.defaultLanguages;
+        const enabledLanguages = languages.filter(lang => lang.enabled);
+        
+        const sourceLang = document.getElementById('sourceLang');
+        const targetLang = document.getElementById('targetLang');
+        
+        // Store current selections
+        const currentSource = sourceLang.value;
+        const currentTarget = targetLang.value;
+        
+        // Clear and populate source language selector
+        sourceLang.innerHTML = '';
+        enabledLanguages.forEach(lang => {
+            const option = document.createElement('option');
+            option.value = lang.code;
+            option.textContent = lang.name;
+            sourceLang.appendChild(option);
+        });
+        
+        // Clear and populate target language selector (exclude 'auto')
+        targetLang.innerHTML = '';
+        enabledLanguages.filter(lang => lang.code !== 'auto').forEach(lang => {
+            const option = document.createElement('option');
+            option.value = lang.code;
+            option.textContent = lang.name;
+            targetLang.appendChild(option);
+        });
+        
+        // Restore selections if they still exist
+        if (enabledLanguages.some(lang => lang.code === currentSource)) {
+            sourceLang.value = currentSource;
+        } else {
+            sourceLang.value = 'auto';
+        }
+        
+        if (enabledLanguages.some(lang => lang.code === currentTarget)) {
+            targetLang.value = currentTarget;
+        } else {
+            targetLang.value = 'en';
+        }
+    }
+
     getLanguageName(code) {
-        const languages = {
-            'auto': 'Auto-detect',
-            'en': 'English',
-            'es': 'Spanish',
-            'fr': 'French',
-            'de': 'German',
-            'it': 'Italian',
-            'pt': 'Portuguese',
-            'ru': 'Russian',
-            'ja': 'Japanese',
-            'ko': 'Korean',
-            'zh': 'Chinese',
-            'ar': 'Arabic',
-            'hi': 'Hindi'
-        };
-        return languages[code] || code;
+        const languages = this.settings.languages || this.defaultLanguages;
+        const language = languages.find(lang => lang.code === code);
+        return language ? language.name : code;
     }
 
     updateStatus(message) {

@@ -63,6 +63,20 @@
                 <small class="help-text">Keep a local history of your translations</small>
             </div>
 
+            <div class="setting-group">
+                <label>Available Languages:</label>
+                <div class="language-config">
+                    <div class="language-list" id="languageList">
+                        <!-- Languages will be populated by JavaScript -->
+                    </div>
+                    <div class="language-actions">
+                        <button type="button" id="addLanguage" class="btn btn-secondary">Add Language</button>
+                        <button type="button" id="resetLanguages" class="btn btn-secondary">Reset to Default</button>
+                    </div>
+                </div>
+                <small class="help-text">Select which languages should be available for translation</small>
+            </div>
+
             <div class="api-test" id="apiTest" style="display: none;">
                 <button id="testConnection" class="test-btn">Test Connection</button>
                 <div id="testResult" class="test-result"></div>

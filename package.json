@@ -7,7 +7,9 @@
     "start": "electron .",
     "dev": "electron . --dev",
     "build": "electron-builder",
-    "dist": "electron-builder --publish=never"
+    "dist": "electron-builder --publish=never",
+    "pack": "electron-builder --dir",
+    "clean-dist": "rm -rf dist/"
   },
   "keywords": ["electron", "translation", "llm"],
   "author": "Your Name",
@@ -28,9 +30,46 @@
     "files": [
       "main.js",
       "renderer.js",
+      "preload.js",
+      "settings.js",
       "index.html",
+      "settings.html",
       "styles.css",
-      "preload.js"
-    ]
+      "settings.css",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ]
+    },
+    "dmg": {
+      "sign": false,
+      "writeUpdateInfo": false,
+      "format": "ULFO",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
